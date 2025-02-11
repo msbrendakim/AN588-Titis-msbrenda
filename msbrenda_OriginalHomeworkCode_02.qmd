@@ -1,0 +1,99 @@
+---
+title: "msbrenda_OriginalHomeworkCode_02"
+author: "Brenda Kim"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+editor: visual
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+------------------------------------------------------------------------
+
+![Photo Credit by Steve Wilson](images/Screenshot%202025-02-11%20at%2015-54-12%20Red%20Titi%20Monkey%20(EXPLORE)%20Red%20titi%20monkey%20Callicebus%20cupre…%20Flickr.png){fig-align="center" width="231"}
+
+Every Saturday morning, at the same time, a primatologist goes and sits in the forest to listen for titi monkey calls, counting the number of calls they hear in a 2 hour window from 5am to 7am. Based on previous knowledge, she believes that the mean number of calls she will hear in that time is exactly 15. Let X represent the appropriate Poisson random variable of the number of calls heard in each monitoring session.
+
+------------------------------------------------------------------------
+
+## 🐒 Question 1: What is the probability that she will hear more than 8 calls during any given session?
+
+```{r}
+lambda <- 15
+prob_more_than_8 <- 1 - ppois(8, lambda)
+print(paste("Probability of hearing more than 8 calls is:", round(prob_more_than_8, 4)))
+```
+
+------------------------------------------------------------------------
+
+## 🐒 Question 2: What is the probability that she will hear no calls in a session?
+
+```{r}
+prob_no_calls <- dpois(0, lambda)
+print(paste("Probability of hearing no calls is:", round(prob_no_calls, 4)))
+```
+
+------------------------------------------------------------------------
+
+## 🐒 Question 3: What is the probability that she will hear exactly 3 calls in a session?
+
+```{r}
+prob_exactly_3 <- dpois(3, lambda)
+print(paste("Probability of hearing exactly 3 calls is:", round(prob_exactly_3, 4)))
+```
+
+------------------------------------------------------------------------
+
+## 🐒 Question 4: Plot the relevant Poisson mass function over the values in range 0 ≤ x ≤ 30.
+
+```{r}
+# Create data frame for ggplot
+pmf_data <- data.frame(
+  x = 0:30,
+  probability = dpois(0:30, lambda)
+)
+
+# Create plot using ggplot2
+ggplot(pmf_data, aes(x = x, y = probability)) +
+  geom_col(fill = "orange", alpha = 0.7) +
+  labs(title = "Poisson Distribution (λ = 15)",
+       x = "Number of Calls",
+       y = "Probability") +
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(0, 30, by = 5))
+```
+
+------------------------------------------------------------------------
+
+## 🐒 Question 5: Simulate 104 results from this distribution (i.e., 2 years of Saturday monitoring sessions).
+
+```{r}
+# Set seed for reproducibility
+set.seed(42)
+
+# Simulate 104 observations
+simulated_data <- rpois(104, lambda)
+```
+
+------------------------------------------------------------------------
+
+## 🐒 Question 6: Plot the simulated results using hist() and use xlim() to set the horizontal limits to be from 0 to 30. How does your histogram compare to the shape of the probability mass function you plotted above?
+
+```{r}
+sim_data <- data.frame(calls = simulated_data)
+
+ggplot(sim_data, aes(x = calls)) +
+  geom_histogram(binwidth = 1, fill = "orange", alpha = 0.7, color = "black") +
+  labs(title = "Histogram of Simulated Titi Monkey Calls",
+       x = "Number of Calls",
+       y = "Frequency") +
+  theme_minimal() +
+  scale_x_continuous(limits = c(0, 30), breaks = seq(0, 30, by = 5))
+```
+
+------------------------------------------------------------------------
